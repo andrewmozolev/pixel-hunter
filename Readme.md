@@ -1,7 +1,7 @@
 # Личный проект «Пиксель хантер» [![Build status][travis-image]][travis-url]
 
 * Студент: [Andrey Mozolev](https://up.htmlacademy.ru/ecmascript/7/user/125911).
-* Наставник: `Неизвестно`.
+* Наставник: `Nobody`.
 
 ---
 
