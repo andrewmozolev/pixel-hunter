@@ -12,6 +12,22 @@ const imagemin = require(`gulp-imagemin`);
 const svgstore = require(`gulp-svgstore`);
 const rollup = require(`gulp-better-rollup`);
 const sourcemaps = require(`gulp-sourcemaps`);
+const mocha = require(`gulp-mocha`);
+const commonjs = require(`rollup-plugin-commonjs`);
+
+
+gulp.task(`test`, function () {
+  return gulp
+  .src([`js/**/*.test.js`])
+  .pipe(rollup({
+    plugins: [
+      commonjs() // Сообщает Rollup, что модули можно загружать из node_modules
+    ]}, `cjs`)) // Выходной формат тестов — `CommonJS` модуль
+  .pipe(gulp.dest(`build/test`))
+  .pipe(mocha({
+    reporter: `spec` // Вид в котором я хочу отображать результаты тестирования
+  }));
+});
 
 gulp.task(`style`, () => {
   return gulp.src(`sass/style.scss`).
