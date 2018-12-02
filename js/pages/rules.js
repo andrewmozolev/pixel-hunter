@@ -1,21 +1,14 @@
-import game1 from './game1.js';
-import intro from './intro.js';
-import {createElementFromString} from '../utils.js';
-import {renderElement} from '../utils.js';
-import {setBackButton} from '../utils.js';
+import renderGame from './game';
+import intro from './intro';
+import {getElementFromTemplate} from '../utils';
+import {renderElement} from '../utils';
+import {setBackButton} from '../utils';
+import headerTemplate from '../templates/header';
+import {INITIAL_STATE} from '../data/game-data';
 
-const rules = createElementFromString(
-    `<header class="header">
-      <button class="back">
-        <span class="visually-hidden">Вернуться к началу</span>
-        <svg class="icon" width="45" height="45" viewBox="0 0 45 45" fill="#000000">
-          <use xlink:href="img/sprite.svg#arrow-left"></use>
-        </svg>
-        <svg class="icon" width="101" height="44" viewBox="0 0 101 44" fill="#000000">
-          <use xlink:href="img/sprite.svg#logo-small"></use>
-        </svg>
-      </button>
-    </header>
+
+const rules = getElementFromTemplate(
+    `${headerTemplate(INITIAL_STATE)}
     <section class="rules">
       <h2 class="rules__title">Правила</h2>
       <ul class="rules__description">
@@ -28,7 +21,7 @@ const rules = createElementFromString(
       </ul>
       <p class="rules__ready">Готовы?</p>
       <form class="rules__form">
-        <input class="rules__input" type="text" placeholder="Ваше Имя">
+        <input class="rules__input" type="text" value="" placeholder="Ваше Имя">
         <button class="rules__button  continue" type="submit" disabled>Go!</button>
       </form>
     </section>`
@@ -53,8 +46,10 @@ input.addEventListener(`input`, (evt) => {
   }
 });
 
-form.addEventListener(`submit`, () => {
-  renderElement(game1);
+form.addEventListener(`submit`, (evt) => {
+  input.value = ``;
+  evt.preventDefault();
+  renderGame(INITIAL_STATE);
 });
 
 export default rules;
