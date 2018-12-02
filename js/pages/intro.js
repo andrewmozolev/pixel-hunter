@@ -1,9 +1,9 @@
 import greeting from './greeting.js';
-import {createElementFromString} from '../utils.js';
+import {getElementFromTemplate} from '../utils.js';
 import {renderElement} from '../utils.js';
 
 /** @type {HTMLElement} */
-const intro = createElementFromString(
+const intro = getElementFromTemplate(
     `<section class="intro">
       <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
       <p class="intro__motto"><sup>*</sup> Это не фото. Это рисунок маслом нидерландского художника-фотореалиста Tjalf Sparnaay.</p>

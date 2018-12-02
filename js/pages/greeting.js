@@ -1,8 +1,8 @@
 import rules from './rules.js';
-import {createElementFromString} from '../utils.js';
+import {getElementFromTemplate} from '../utils.js';
 import {renderElement} from '../utils.js';
 
-const greeting = createElementFromString(
+const greeting = getElementFromTemplate(
     `<section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
       <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>

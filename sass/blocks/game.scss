@@ -128,3 +128,7 @@
     border-color: $link-active-color;
   }
 }
+
+.game__image {
+  object-fit: cover;
+}

@@ -5,7 +5,7 @@ const main = document.getElementById(`main`);
  * @param {string} string
  * @return {HTMLElement}
  */
-const createElementFromString = (string) => {
+export const getElementFromTemplate = (string) => {
   const div = document.createElement(`div`);
   div.innerHTML = string;
   return div;
@@ -15,7 +15,7 @@ const createElementFromString = (string) => {
  * @param {HTMLElement} elem
  * @param {Function} cb
  */
-const setBackButton = (elem, cb) => {
+export const setBackButton = (elem, cb) => {
   const backBtn = elem.querySelector(`.back`);
   if (backBtn) {
     backBtn.addEventListener(`click`, () => {
@@ -25,9 +25,24 @@ const setBackButton = (elem, cb) => {
 };
 
 /** @param {HTMLElement} element */
-const renderElement = (element) => {
+export const renderElement = (element) => {
   main.innerHTML = ``;
   main.appendChild(element);
 };
 
-export {createElementFromString, renderElement, setBackButton};
+export const className = (baseClassName, ...args) => {
+  if (!args.length || args.length % 2 !== 0) {
+    return baseClassName;
+  }
+
+  const classes = args.reduce((acc, item, index, arr) => {
+    if (index % 2 === 0 && !!item) {
+      acc.push(`${baseClassName}--${arr[index + 1]}`);
+    }
+
+    return acc;
+  }, []);
+
+  classes.unshift(baseClassName);
+  return classes.join(` `);
+};

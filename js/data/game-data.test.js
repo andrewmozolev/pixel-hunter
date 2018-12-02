@@ -3,109 +3,32 @@ import {countScores} from './game-data';
 import {changeLives} from './game-data';
 import {changeLevel} from './game-data';
 import {changeTime} from './game-data';
+import {addAnswer} from './game-data';
 import {INITIAL_STATE} from './game-data';
 
-const answersTooShort = [
-  {isSuccess: false, time: 5}
-];
 
-const answersTooShort2 = [
-  {isSuccess: false, time: 1},
-  {isSuccess: false, time: 2},
-  {isSuccess: false, time: 3},
-  {isSuccess: false, time: 4},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 6},
-  {isSuccess: false, time: 7},
-  {isSuccess: false, time: 8},
-  {isSuccess: false, time: 9},
-];
+const answersTooShort = [-5];
 
-const answersTooLong = [
-  {isSuccess: false, time: 1},
-  {isSuccess: false, time: 2},
-  {isSuccess: false, time: 3},
-  {isSuccess: false, time: 4},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 6},
-  {isSuccess: false, time: 7},
-  {isSuccess: false, time: 8},
-  {isSuccess: false, time: 9},
-  {isSuccess: false, time: 10},
-  {isSuccess: false, time: 11},
-];
+const answersTooShort2 = [-1, -2, -3, -4, -5, -6, -7, -8, -9];
 
-const answersHalfFastAndTrue = [
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: true, time: 5},
-  {isSuccess: true, time: 5},
-  {isSuccess: true, time: 5},
-  {isSuccess: true, time: 5},
-  {isSuccess: true, time: 5}
-];
+const answersTooLong = [-1, 2, -3, -4, -5, 6, -7, -8, -9, 10, -11, 12, -13, -14, 15];
 
-const answersAverageSpeedAndTrue = [
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15},
-  {isSuccess: true, time: 15}
-];
+const answersHalfFastAndTrue = [-25, -25, -25, -25, -25, 5, 5, 5, 5, 5];
 
-const answersFastAndFalse = [
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5},
-  {isSuccess: false, time: 5}
-];
+const answersAverageSpeedAndTrue = [15, 15, 15, 15, 15, 15, 15, 15, 15, 15];
 
-const answersSlowAndFalse = [
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25},
-  {isSuccess: false, time: 25}
-];
+const answersFastAndFalse = [-5, -5, -5, -5, -5, -5, -5, -5, -5, -5];
 
-const answersSlowAndTrue = [
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25},
-  {isSuccess: true, time: 25}
-];
+const answersSlowAndFalse = [-25, -25, -25, -25, -25, -25, -25, -25, -25, -25];
+
+const answersSlowAndTrue = [25, 25, 25, 25, 25, 25, 25, 25, 25, 25];
 
 describe(`countScores`, () => {
   it(`Valid score.`, () => {
-    assert.equal(countScores(answersHalfFastAndTrue, 0), 500);
+    assert.equal(countScores(answersHalfFastAndTrue, 0), 750);
     assert.equal(countScores(answersAverageSpeedAndTrue, 3), 1150);
-    assert.equal(countScores(answersFastAndFalse, 1), 550);
-    assert.equal(countScores(answersSlowAndFalse, 1), -450);
+    assert.equal(countScores(answersFastAndFalse, 1), 50);
+    assert.equal(countScores(answersSlowAndFalse, 1), 50);
     assert.equal(countScores(answersSlowAndTrue, 1), 550);
   });
 
@@ -201,5 +124,26 @@ describe(`changeTime`, () => {
     assert.equal(changeTime(INITIAL_STATE, true).time, INITIAL_STATE.time);
     assert.equal(changeTime(INITIAL_STATE, []).time, INITIAL_STATE.time);
     assert.equal(changeTime(INITIAL_STATE, {}).time, INITIAL_STATE.time);
+  });
+});
+
+describe(`addAnswer`, () => {
+  it(`Valid score.`, () => {
+    assert.deepEqual(addAnswer(INITIAL_STATE, 5).answers, [5]);
+    assert.deepEqual(addAnswer(INITIAL_STATE, 15).answers, [15]);
+    assert.deepEqual(addAnswer(INITIAL_STATE, 25).answers, [25]);
+    assert.deepEqual(addAnswer(INITIAL_STATE, -25).answers, [-25]);
+  });
+
+  it(`Invalid score.`, () => {
+    assert.deepEqual(addAnswer(INITIAL_STATE, ``).answers, []);
+    assert.deepEqual(addAnswer(INITIAL_STATE, `some text`).answers, []);
+  });
+
+  it(`Invalid data.`, () => {
+    assert.deepEqual(addAnswer(INITIAL_STATE, null).answers, []);
+    assert.deepEqual(addAnswer(INITIAL_STATE, undefined).answers, []);
+    assert.deepEqual(addAnswer(INITIAL_STATE, true).answers, []);
+    assert.deepEqual(addAnswer(INITIAL_STATE, {}).answers, []);
   });
 });
