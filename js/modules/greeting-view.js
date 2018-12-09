@@ -1,9 +1,12 @@
-import rules from './rules.js';
-import {getElementFromTemplate} from '../utils.js';
-import {renderElement} from '../utils.js';
+import AbstractView from '../utils/abstractview';
 
-const greeting = getElementFromTemplate(
-    `<section class="greeting central--blur">
+export default class GreetingView extends AbstractView {
+  constructor() {
+    super();
+  }
+
+  get template() {
+    return `<section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
       <div class="greeting__asterisk asterisk"><span class="visually-hidden">Я просто красивая звёздочка</span>*</div>
       <div class="greeting__challenge">
@@ -22,14 +25,16 @@ const greeting = getElementFromTemplate(
           <use xlink:href="img/sprite.svg#arrow-right"></use>
         </svg>
       </button>
-    </section>`
-);
+    </section>`;
+  }
 
-/** @type {HTMLElement} */
-const arrow = greeting.querySelector(`.greeting__continue`);
+  bind() {
+    const arrow = this.element.querySelector(`.greeting__continue`);
 
-arrow.addEventListener(`click`, () => {
-  renderElement(rules);
-});
+    arrow.addEventListener(`click`, () => {
+      this.onArrowClick();
+    });
+  }
 
-export default greeting;
+  onArrowClick() {}
+}

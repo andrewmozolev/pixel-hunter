@@ -1,4 +1,3 @@
-import {renderElement} from './utils.js';
-import intro from './pages/intro.js';
+import intro from './modules/intro.js';
 
-renderElement(intro);
+intro();
