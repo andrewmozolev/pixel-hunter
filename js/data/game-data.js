@@ -1,3 +1,6 @@
+import App from '../app';
+
+
 /**
  * @const {StateDataType}
  * @readonly
@@ -56,31 +59,6 @@ export const levels = [
 /** @typedef {Object<string, boolean>} */
 LevelDataType;
 
-/** @enum {string} */
-const ScoreName = {
-  FAST: `fast`,
-  LIFE: `life`,
-  CORRECT: `correct`,
-  SLOW: `slow`,
-};
-
-/** @const {Object<string, number>} */
-const SCORES = {
-  [ScoreName.FAST]: 50,
-  [ScoreName.LIFE]: 50,
-  [ScoreName.CORRECT]: 100,
-  [ScoreName.SLOW]: -50,
-};
-
-/** @const {Object<*>} */
-export const SETTINGS = {
-  MAX_LIVES: 3,
-  MAX_LEVELS: 10,
-  MAX_FAST_TIME: 10,
-  MIN_SLOW_TIME: 20,
-  NUMBER_OF_ANSWERS: 10,
-};
-
 /**
  * @param {Array<number>} answers
  * @param {number} lives
@@ -88,7 +66,7 @@ export const SETTINGS = {
  * @return {number}
  */
 export const countScores = (answers, lives) => {
-  if (!Array.isArray(answers) || answers.length !== SETTINGS.NUMBER_OF_ANSWERS) {
+  if (!Array.isArray(answers) || answers.length !== App.SETTINGS.NUMBER_OF_ANSWERS) {
     return -1;
   }
 
@@ -96,19 +74,19 @@ export const countScores = (answers, lives) => {
 
   answers.forEach((answer) => {
     if (answer >= 0) {
-      scores += SCORES[ScoreName.CORRECT];
+      scores += App.SETTINGS.SCORE_CORRECT;
     }
 
-    if (answer >= 0 && answer < SETTINGS.MAX_FAST_TIME) {
-      scores += SCORES[ScoreName.FAST];
+    if (answer >= 0 && answer < App.SETTINGS.MAX_FAST_TIME) {
+      scores += App.SETTINGS.SCORE_FAST;
     }
 
-    if (answer >= 0 && answer >= SETTINGS.MIN_SLOW_TIME) {
-      scores += SCORES[ScoreName.SLOW];
+    if (answer >= 0 && answer >= App.SETTINGS.MIN_SLOW_TIME) {
+      scores += App.SETTINGS.SCORE_SLOW;
     }
   });
 
-  scores += lives * SCORES[ScoreName.LIFE];
+  scores += lives * App.SETTINGS.SCORE_LIFE;
 
   return scores;
 };
@@ -130,9 +108,9 @@ export const changeLives = (state, lives) => {
     });
   }
 
-  if (lives > SETTINGS.MAX_LIVES) {
+  if (lives > App.SETTINGS.MAX_LIVES) {
     return Object.assign({}, state, {
-      lives: SETTINGS.MAX_LIVES
+      lives: App.SETTINGS.MAX_LIVES
     });
   }
 
@@ -165,9 +143,9 @@ export const changeLevel = (state, level) => {
     });
   }
 
-  if (level > SETTINGS.MAX_LEVELS) {
+  if (level > App.SETTINGS.MAX_LEVELS) {
     return Object.assign({}, state, {
-      level: SETTINGS.MAX_LEVELS
+      level: App.SETTINGS.MAX_LEVELS
     });
   }
 

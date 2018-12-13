@@ -7,7 +7,7 @@ export default class AbstractView {
   /** @return {HTMLElement} */
   createDom() {
     const div = document.createElement(`div`);
-    div.innerHTML = this.template;
+    div.innerHTML = this.template.trim();
     return div.childNodes.length > 1 ? div : div.childNodes[0];
   }
 
