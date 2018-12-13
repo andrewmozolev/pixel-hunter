@@ -1,4 +1,5 @@
-import AbstractView from '../utils/abstractview';
+import AbstractView from '../utils/abstract-view';
+
 
 export default class RulesView extends AbstractView {
   constructor() {

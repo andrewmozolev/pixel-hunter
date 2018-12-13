@@ -1,4 +1,4 @@
-import AbstractView from '../utils/abstractview';
+import AbstractView from '../utils/abstract-view';
 import {countScores} from '../data/game-data';
 import StatLineView from './statline-view';
 
