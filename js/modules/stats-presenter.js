@@ -3,21 +3,30 @@ import HeaderView from './header-view';
 import App from '../app';
 import StatsView from './stats-view';
 
+
 export default class StatsPresenter extends AbstractPresenter {
-  constructor(state) {
+  /**
+   * @param {string} username
+   */
+  constructor(username) {
     super();
 
-    /** @private {GameData.StateDataType}*/
-    this._state = state;
+    /** @private {?Array<Stat>}*/
+    this._stats = null;
+
+    /** @private {string} */
+    this._username = username;
   }
 
-  /** @inheritDoc */
-  init() {
+  /** @param {Array<Stat>} stats */
+  init(stats) {
+    this._stats = stats;
+
     const headerView = new HeaderView();
     headerView.onBackClick = () => App.showIntro();
 
-    const isDefeat = this._state.lives === 0;
-    const statsView = new StatsView(this._state, this._getBonuses(this._state), isDefeat);
+    const isDefeat = this._stats[0].lives === 0;
+    const statsView = new StatsView(this._stats, this._getBonuses(this._stats[0]), isDefeat);
 
     this.addChildren(headerView, statsView);
   }
