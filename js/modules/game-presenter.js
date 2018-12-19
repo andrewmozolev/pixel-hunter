@@ -7,7 +7,10 @@ import StatLineView from './statline-view';
 
 
 export default class GamePresenter extends AbstractPresenter {
-  /** @param {GameModel} model */
+  /**
+   * @param {GameModel} model
+   * @param {string} username
+   */
   constructor(model) {
     super();
 
@@ -52,7 +55,7 @@ export default class GamePresenter extends AbstractPresenter {
   /** @private */
   _nextQuestion() {
     if (this._model.isEnd()) {
-      App.showStats(this._model.state);
+      App.showStats(this._model.state, this._model.username);
       this.stop();
       return;
     }

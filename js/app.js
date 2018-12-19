@@ -26,18 +26,24 @@ export default class App {
     rulesPresenter.init();
   }
 
-  static showGame(playerName) {
+  /**
+   * @param {string} username
+   * @static
+   */
+  static showGame(username) {
     Loader.loadQuestions()
       .then((data) => {
-        const model = new GameModel(data, playerName);
+        const model = new GameModel(data, username);
         const gamePresenter = new GamePresenter(model);
         gamePresenter.init();
       });
   }
 
-  static showStats(state) {
-    const statsPresenter = new StatsPresenter(state);
-    statsPresenter.init();
+  static showStats(state, username) {
+    const statsPresenter = new StatsPresenter(username);
+    Loader.sendResults(state, username)
+        .then(() => Loader.loadResults(username))
+        .then((data) => statsPresenter.init(data));
   }
 }
 

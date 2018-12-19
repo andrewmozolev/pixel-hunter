@@ -4,14 +4,29 @@ import Option from '../data/option';
 
 
 export default class GameModel {
-  constructor(questions, playerName) {
-    this._playerName = playerName;
-    this._state = GameData.INITIAL_STATE;
+  /**
+   * @param {Array<Question>} questions
+   * @param {string} username
+   */
+  constructor(questions, username) {
+    /** @private {Array<Question>} */
     this._questions = questions;
+
+    /** @private {string} */
+    this._username = username;
+
+    /** @private {GameData.StateDatatype} */
+    this._state = GameData.INITIAL_STATE;
   }
 
+  /** @return {GameData.StateDataType} */
   get state() {
     return this._state;
+  }
+
+  /** @return {string} */
+  get username() {
+    return this._username;
   }
 
   /** @return {Array<number>} */
