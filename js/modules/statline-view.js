@@ -1,12 +1,13 @@
 import AbstractView from '../utils/abstract-view';
-import utils from '../utils/utils';
 import App from '../app';
+import Utils from '../utils/utils';
 
 
 export default class StatLineView extends AbstractView {
   constructor(answers) {
     super();
 
+    /** @private */
     this._answers = answers;
   }
 
@@ -46,7 +47,7 @@ export default class StatLineView extends AbstractView {
 
   _getAnswerClassName(answer) {
     const answerType = this._getAnswerType(answer);
-    return utils.className(`stats__result`,
+    return Utils.className(`stats__result`,
         answerType === StatLineView.AnswerType.CORRECT, StatLineView.AnswerType.CORRECT,
         answerType === StatLineView.AnswerType.FAST, StatLineView.AnswerType.FAST,
         answerType === StatLineView.AnswerType.SLOW, StatLineView.AnswerType.SLOW,

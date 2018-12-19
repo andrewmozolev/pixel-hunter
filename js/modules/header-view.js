@@ -3,16 +3,21 @@ import App from '../app';
 
 
 export default class HeaderView extends AbstractView {
+  /** @param {GameData.StateDataType} state */
   constructor(state) {
     super();
 
+    /** @private {GameData.StateDataType} */
     this._state = state;
 
+    /** @private {boolean} */
     this._isInfoEnabled = !!state;
 
+    /** @private {?HTMLElement} */
     this._timeEl = null;
   }
 
+  /** @inheritDoc */
   get template() {
     return `<header class="header">
       <button class="back">
@@ -32,6 +37,7 @@ export default class HeaderView extends AbstractView {
     </header>`;
   }
 
+  /** @inheritDoc */
   bind() {
     this._timeEl = this.element.querySelector(`.game__timer`);
     const backBtn = this.element.querySelector(`.back`);

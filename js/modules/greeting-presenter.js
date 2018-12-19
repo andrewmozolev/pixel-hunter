@@ -1,6 +1,6 @@
 import AbstractPresenter from '../utils/abstract-presenter';
-import GreetingView from './greeting-view';
 import App from '../app';
+import GreetingView from './greeting-view';
 
 
 export default class GreetingPresenter extends AbstractPresenter {
@@ -14,6 +14,7 @@ export default class GreetingPresenter extends AbstractPresenter {
     this.addChildren(greetingView);
   }
 
+  /** @private */
   _onArrowClick() {
     App.showRules();
   }

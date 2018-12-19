@@ -8,33 +8,43 @@ export default class RulesPresenter extends AbstractPresenter {
   constructor() {
     super();
 
+    /** @private {RulesView} */
     this._rulesView = null;
   }
 
   init() {
-    this._rulesView = new RulesView();
-    const header = new HeaderView();
+    const headerView = new HeaderView();
+    headerView.onBackClick = () => App.showIntro();
 
-    header.onBackClick = () => App.showIntro();
+    this._rulesView = new RulesView();
     this._rulesView.onBlurHandler = () => this._onBlurHandler();
-    this._rulesView.onInputHandler = (evt) => this._onInputHandler(evt);
+    this._rulesView.onInputHandler = () => this._onInputHandler();
     this._rulesView.onSubmitHandler = (evt) => this._onSubmitHandler(evt);
     this._rulesView.onEnterDocument = () => this._rulesView.input.focus();
 
-    this.addChildren(header, this._rulesView);
+    this.addChildren(headerView, this._rulesView);
   }
 
+  /** @private */
   _onBlurHandler() {
-    setTimeout(() => this._rulesView.input.focus(), 100);
+    setTimeout(() => this._rulesView.input.focus(), RulesPresenter.FOCUS_DELAY);
   }
 
-  _onInputHandler(evt) {
-    this._rulesView.switchButton(evt.target.value.trim().length > 0);
+  /** @private */
+  _onInputHandler() {
+    this._rulesView.switchButton(this._rulesView.value.trim().length > 0);
   }
 
+  /**
+   * @param {Event} evt
+   * @private
+   */
   _onSubmitHandler(evt) {
     evt.preventDefault();
+    App.showGame(this._rulesView.value);
     this._rulesView.resetInput();
-    App.showGame();
   }
 }
+
+/** @const {number} */
+RulesPresenter.FOCUS_DELAY = 100;

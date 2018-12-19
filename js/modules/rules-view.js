@@ -5,15 +5,21 @@ export default class RulesView extends AbstractView {
   constructor() {
     super();
 
-    /** @private {?Element} */
+    /** @private {?HTMLElement} */
     this._input = null;
 
-    /** @private {?Element} */
+    /** @private {?HTMLElement} */
     this._btn = null;
   }
 
+  /** @return {HTMLElement} */
   get input() {
     return this._input;
+  }
+
+  /** @return {string} */
+  get value() {
+    return this.input.value;
   }
 
   /** @inheritDoc */
@@ -36,22 +42,15 @@ export default class RulesView extends AbstractView {
     </section>`;
   }
 
+  /** @inheritDoc */
   bind() {
     const form = this.element.querySelector(`.rules__form`);
     this._input = this.element.querySelector(`.rules__input`);
     this._btn = this.element.querySelector(`.rules__button`);
 
-    this._input.addEventListener(`input`, (evt) => {
-      this.onInputHandler(evt);
-    });
-
-    this._input.addEventListener(`blur`, (evt) => {
-      this.onBlurHandler(evt);
-    });
-
-    form.addEventListener(`submit`, (evt) => {
-      this.onSubmitHandler(evt);
-    });
+    this._input.addEventListener(`input`, () => this.onInputHandler());
+    this._input.addEventListener(`blur`, (evt) => this.onBlurHandler(evt));
+    form.addEventListener(`submit`, (evt) => this.onSubmitHandler(evt));
   }
 
   switchButton(isButtonEnabled) {
@@ -63,10 +62,15 @@ export default class RulesView extends AbstractView {
   }
 
   resetInput() {
-    this._input.value = ``;
+    this.input.value = ``;
   }
 
+  /** @abstract */
   onBlurHandler() {}
+
+  /** @abstract */
   onInputHandler() {}
+
+  /** @abstract */
   onSubmitHandler() {}
 }

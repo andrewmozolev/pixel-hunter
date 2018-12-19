@@ -6,6 +6,7 @@ export default class IntroView extends AbstractView {
     super();
   }
 
+  /** @inheritDoc */
   get template() {
     return `<section class="intro">
       <button class="intro__asterisk asterisk" type="button"><span class="visually-hidden">Продолжить</span>*</button>
@@ -13,6 +14,7 @@ export default class IntroView extends AbstractView {
     </section>`;
   }
 
+  /** @inheritDoc */
   bind() {
     const asterisk = this.element.querySelector(`.intro__asterisk`);
 
@@ -21,5 +23,6 @@ export default class IntroView extends AbstractView {
     });
   }
 
+  /** @abstract */
   onAsteriskClick() {}
 }

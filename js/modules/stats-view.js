@@ -1,17 +1,28 @@
 import AbstractView from '../utils/abstract-view';
-import {countScores} from '../data/game-data';
 import StatLineView from './statline-view';
+import GameData from '../data/game-data';
 
 
 export default class StatsView extends AbstractView {
+  /**
+   * @param {GameData.StateDataType} state
+   * @param {Array<*>} bonuses
+   * @param {boolean} isDefeat
+   */
   constructor(state, bonuses, isDefeat) {
     super();
 
+    /** @private {GameData.StateDataType} */
     this._state = state;
+
+    /** @private {Array<*>} */
     this._bonuses = bonuses;
+
+    /** @private {boolean} */
     this._isDefeat = isDefeat;
   }
 
+  /** @inheritDoc */
   get template() {
     return `<section class="result">
         <h2 class="result__title">${this._isDefeat ? `Поражение!` : `Победа!`}</h2>
@@ -32,7 +43,7 @@ export default class StatsView extends AbstractView {
               <td class="result__total">${bonus.value * bonus.quantifier}</td>
             </tr>`).join(``)}
           <tr>
-            <td colspan="5" class="result__total  result__total--final">${countScores(this._state.answers, this._state.lives)}</td>
+            <td colspan="5" class="result__total  result__total--final">${GameData.countScores(this._state.answers, this._state.lives)}</td>
           </tr>
         </table>
       </section>`;

@@ -50,6 +50,7 @@
   position: absolute;
   width: 78px;
   height: 78px;
+  cursor: pointer;
 
   bottom: 30px;
 
@@ -78,7 +79,7 @@
     }
   }
 
-  &--paint {
+  &--painting {
     right: 30px;
 
     & span {
@@ -92,6 +93,11 @@
 
   & input:checked + span {
     background-color: $link-hover-color;
+  }
+
+  &--correct {
+    box-shadow: 0 0 0 10px $link-correct;
+    border-radius: 50%;
   }
 }
 
@@ -109,7 +115,7 @@
     left: -100px;
   }
 
-  .game__answer--paint {
+  .game__answer--painting {
     right: -100px;
   }
 }
@@ -126,6 +132,12 @@
 
   &:active {
     border-color: $link-active-color;
+  }
+
+  &--correct,
+  &--correct:hover,
+  &--correct:active {
+    border-color: $link-correct;
   }
 }
 

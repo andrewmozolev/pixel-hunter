@@ -1,94 +1,109 @@
-import {
-  addAnswer,
-  changeLevel,
-  changeLives,
-  changeTime,
-  INITIAL_STATE,
-  levels,
-} from '../data/game-data';
 import App from '../app';
+import GameData from '../data/game-data';
+import Option from '../data/option';
 
 
 export default class GameModel {
-  constructor(playerName) {
+  constructor(questions, playerName) {
     this._playerName = playerName;
-    this._state = INITIAL_STATE;
-    this._levels = levels;
+    this._state = GameData.INITIAL_STATE;
+    this._questions = questions;
   }
 
   get state() {
     return this._state;
   }
 
+  /** @return {Array<number>} */
   get answers() {
     return this._state.answers;
   }
 
+  /** @return {number} */
   get lives() {
     return this._state.lives;
   }
 
+  /** @return {number} */
   get time() {
     return this._state.time;
   }
 
-  get level() {
-    return this._levels[this._state.level];
+  /** @return {Question} */
+  get question() {
+    return this._questions[this._state.question];
   }
 
+  /** @return {Array<Option>} */
+  get options() {
+    return this.question.options;
+  }
+
+  /** @return {string} */
   get title() {
-    switch (this.gameType) {
-      case GameModel.Type.ONE:
-        return `Угадай, фото или рисунок?`;
-      case GameModel.Type.TWO:
-        return `Угадайте для каждого изображения фото или рисунок?`;
-      case GameModel.Type.THREE:
-        return `Найдите рисунок среди изображений`;
-    }
-    return ``;
+    return this.question.title;
   }
 
+  /** @return {string} */
   get gameType() {
-    return Object.keys(this.level).length;
+    return this.question.type;
   }
 
-  nextLevel() {
-    this._state = changeLevel(this._state, this._state.level + 1);
+  nextQuestion() {
+    this._state = GameData.changeQuestion(this._state, this._state.question + 1);
   }
 
   restart() {
-    this._state = INITIAL_STATE;
+    this._state = GameData.INITIAL_STATE;
   }
 
   tick() {
-    this._state = changeTime(this._state, this._state.time + 1);
+    this._state = GameData.changeTime(this._state, this._state.time + 1);
   }
 
   resetTime() {
-    this._state = changeTime(this._state, 0);
+    this._state = GameData.changeTime(this._state, 0);
   }
 
   removeLife() {
-    this._state = changeLives(this._state, this._state.lives - 1);
+    this._state = GameData.changeLives(this._state, this._state.lives - 1);
   }
 
+  /** @return {boolean} */
   isEnd() {
     return this.answers.length === App.SETTINGS.MAX_LEVELS ||
       this.lives === 0;
   }
 
-  isCorrectAnswer(answer) {
-    return this.level[answer];
+  /** @return {string} */
+  getCorrectType() {
+    const photoCount = this.options.reduce((acc, option) => {
+      return acc + (option.type === Option.Type.PHOTO ? 1 : 0);
+    }, 0);
+    return photoCount === 1 ? Option.Type.PHOTO : Option.Type.PAINTING;
   }
 
+  /**
+   * @param {string} src
+   * @param {string} answer
+   * @return {boolean}
+   */
+  isCorrectAnswer(src, answer) {
+    const option = this._getOptionByUrl(src);
+    return option.type === answer;
+  }
+
+  /** @param {number} time */
   addAnswer(time) {
-    this._state = addAnswer(this.state, time);
+    this._state = GameData.addAnswer(this.state, time);
+  }
+
+  /**
+   * @param {string} url
+   * @return {Option}
+   * @private
+   */
+  _getOptionByUrl(url) {
+    return this.options.find((option) => option.image.url === url);
   }
 }
-
-/** @enum {number} */
-GameModel.Type = {
-  ONE: 1,
-  TWO: 2,
-  THREE: 3,
-};
