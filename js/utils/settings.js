@@ -1,5 +1,5 @@
 export const SETTINGS = {
-  DEBUG: false,
+  DEBUG: true,
   MAX_FAST_TIME: 10,
   MAX_LEVELS: 10,
   MAX_LIVES: 3,

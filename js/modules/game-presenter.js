@@ -1,19 +1,26 @@
+import AbstractPresenter from '../utils/abstract-presenter';
+import App from '../app';
 import GameView from './game-view';
 import HeaderView from './header-view';
+import Question from '../data/question';
 import StatLineView from './statline-view';
-import AbstractPresenter from '../utils/abstract-presenter';
-import GameModel from './game-model';
-import App from '../app';
 
 
 export default class GamePresenter extends AbstractPresenter {
+  /** @param {GameModel} model */
   constructor(model) {
     super();
 
     /** @private {GameModel} */
     this._model = model;
+
+    /** @private {GameView} */
     this._gameView = null;
+
+    /** @private {HeaderView} */
     this._headerView = null;
+
+    /** @private {StatLineView} */
     this._statLineView = null;
 
     /** @private {?number} */
@@ -25,7 +32,7 @@ export default class GamePresenter extends AbstractPresenter {
   }
 
   init() {
-    this._nextLevel();
+    this._nextQuestion();
     this._tick();
   }
 
@@ -38,11 +45,12 @@ export default class GamePresenter extends AbstractPresenter {
     const answer = isCorrect ? time : -time;
     this._model.addAnswer(answer);
     this._model.resetTime();
-    this._model.nextLevel();
-    this.start();
+    this._model.nextQuestion();
+    this.init();
   }
 
-  _nextLevel() {
+  /** @private */
+  _nextQuestion() {
     if (this._model.isEnd()) {
       App.showStats(this._model.state);
       this.stop();
@@ -52,68 +60,56 @@ export default class GamePresenter extends AbstractPresenter {
     this._headerView = new HeaderView(this._model.state);
     this._headerView.onBackClick = () => App.showGreeting();
 
-    this._gameView = new GameView(this._model.level, this._model.title);
+    this._gameView = new GameView(this._model.question,
+        this._model.getCorrectType());
     this._gameView.onFormClickHandler = (evt) => this._onFormClickHandler(evt);
-    this._gameView.onFormChangeHandler = (evt) => this._onFormChangeHandler(evt);
+    this._gameView.onFormChangeHandler = () => this._onFormChangeHandler();
 
     this._statLineView = new StatLineView(this._model.answers);
 
     this.addChildren(this._headerView, this._gameView, this._statLineView);
   }
 
-  _onFormChangeHandler(evt) {
-    if (this._model.gameType === GameModel.Type.THREE) {
+  /** @private */
+  _onFormChangeHandler() {
+    if (this._model.gameType === Question.Type.ONE_OF_THREE) {
       return;
     }
 
-    const questions = [...this._gameView.getFormElements()];
+    const inputs = this._gameView.getInputsElements();
+    const options = this._gameView.getOptionsElements();
 
-    const checkedInputs = questions.reduce((acc, input) => {
-      if (input.checked) {
-        acc.push(input);
-      }
-      return acc;
-    }, []);
+    const numberOfCheckedInputs =
+        inputs.filter((input) => input.checked).length;
 
-    if (checkedInputs.length !== this._model.gameType) {
+    if (numberOfCheckedInputs !== options.length) {
       return;
     }
 
-    const isCorrectAnswer = checkedInputs.every((input, index) => {
-      return this._model.level[Object.keys(this._model.level)[index]] ?
-        input.value === `paint` :
-        input.value === `photo`;
+    const isCorrectAnswer = options.every((option, index) => {
+      const image = this._gameView.getPreciseImage(index);
+      const checkedInput = this._gameView.getPreciseImageCheckedInput(index);
+      return this._model.isCorrectAnswer(image.src, checkedInput.value);
     });
-
-    let target = evt.target;
-    while (target.className !== this._gameView.optionClassName) {
-      if (target.className === this._gameView.optionClassName) {
-        isCorrectAnswer = this._model.isCorrectAnswer(target.querySelector(`img`).src);
-        this.setAnswer(isCorrectAnswer);
-        return;
-      }
-      target = target.parentNode;
-    }
 
     this.setAnswer(isCorrectAnswer);
   }
 
-  _onFormClickHandler(evt) {
-    if (this._model.gameType !== GameModel.Type.THREE) {
+  /**
+   * @param {Event} param
+   * @param {HTMLElement} param.target
+   * @private
+   */
+  _onFormClickHandler({target}) {
+    if (this._model.gameType !== Question.Type.ONE_OF_THREE ||
+        target.className !== GameView.ClassName.GAME_IMAGE) {
       return;
     }
 
-    let target = evt.target;
-    let isCorrectAnswer = false;
+    const isCorrectAnswer =
+        this._model.isCorrectAnswer(target.src, this._model.getCorrectType());
 
-    while (target !== this._gameView.form) {
-      if (target.className === this._gameView.optionClassName) {
-        isCorrectAnswer = this._model.isCorrectAnswer(target.querySelector(`img`).src);
-        this.setAnswer(isCorrectAnswer);
-        return;
-      }
-      target = target.parentNode;
-    }
+    this.setAnswer(isCorrectAnswer);
   }
 
   _tick() {

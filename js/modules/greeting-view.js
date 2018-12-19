@@ -6,6 +6,7 @@ export default class GreetingView extends AbstractView {
     super();
   }
 
+  /** @inheritDoc */
   get template() {
     return `<section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
@@ -29,6 +30,7 @@ export default class GreetingView extends AbstractView {
     </section>`;
   }
 
+  /** @inheritDoc */
   bind() {
     const arrow = this.element.querySelector(`.greeting__continue`);
 
@@ -37,5 +39,6 @@ export default class GreetingView extends AbstractView {
     });
   }
 
+  /** @abstract */
   onArrowClick() {}
 }

@@ -7,9 +7,11 @@ export default class StatsPresenter extends AbstractPresenter {
   constructor(state) {
     super();
 
+    /** @private {GameData.StateDataType}*/
     this._state = state;
   }
 
+  /** @inheritDoc */
   init() {
     const headerView = new HeaderView();
     headerView.onBackClick = () => App.showIntro();
@@ -20,6 +22,11 @@ export default class StatsPresenter extends AbstractPresenter {
     this.addChildren(headerView, statsView);
   }
 
+  /**
+   * @param {GameData.StateDataType} state
+   * @return {Array<*>}
+   * @private
+   */
   _getBonuses(state) {
     const bonuses = [];
     const speedBonuses = state.answers.reduce((acc, answer) => {

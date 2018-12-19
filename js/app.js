@@ -5,6 +5,10 @@ import IntroPresenter from './modules/intro-presenter';
 import RulesPresenter from './modules/rules-presenter';
 import {SETTINGS} from './utils/settings';
 import StatsPresenter from './modules/stats-presenter';
+import Utils from './utils/utils';
+import Question from './data/question';
+import Loader from './utils/loader';
+
 
 export default class App {
   static showIntro() {
@@ -22,10 +26,13 @@ export default class App {
     rulesPresenter.init();
   }
 
-  static showGame() {
-    const model = new GameModel(`playerName`);
-    const gamePresenter = new GamePresenter(model);
-    gamePresenter.init();
+  static showGame(playerName) {
+    Loader.loadQuestions()
+      .then((data) => {
+        const model = new GameModel(data, playerName);
+        const gamePresenter = new GamePresenter(model);
+        gamePresenter.init();
+      });
   }
 
   static showStats(state) {
