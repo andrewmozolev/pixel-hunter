@@ -2,7 +2,7 @@ import Image from './image';
 
 
 export default class Option {
-  /** @param {Option.TypeDef} data */
+  /** @param {Option.DataType} data */
   constructor(data) {
     this.image = data.image;
     this.type = data.type;
@@ -25,9 +25,8 @@ export default class Option {
  * @typedef {{
  *   image: Image,
  *   type: string
- * }}
+ * }} Option.DataType
  */
-Option.TypeDef;
 
 /** @enum {string} */
 Option.Type = {

@@ -24,6 +24,5 @@ export default class Stat {
  *   date: number,
  *   answers: Array<number>,
  *   lives: number,
- * }}
+ * }} Stat.DataType
  */
-Stat.DataType;

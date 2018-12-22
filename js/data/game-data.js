@@ -167,9 +167,8 @@ export default class GameData {
  *   question: number,
  *   lives: number,
  *   time: number,
- * }}
+ * }} GameData.StateDataType
  */
-GameData.StateDataType;
 
 /**
  * @const {GameData.StateDataType}
