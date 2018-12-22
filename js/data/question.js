@@ -29,9 +29,8 @@ export default class Question {
  *   options: Array<Option>,
  *   title: string,
  *   type: string,
- * }}
+ * }} Question.DataType
  */
-Question.DataType;
 
 /** @enum {string} */
 Question.Type = {
