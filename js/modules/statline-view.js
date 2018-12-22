@@ -1,6 +1,6 @@
 import AbstractView from '../utils/abstract-view';
-import App from '../app';
 import Utils from '../utils/utils';
+import {Setting} from '../utils/settings';
 
 
 export default class StatLineView extends AbstractView {
@@ -25,7 +25,7 @@ export default class StatLineView extends AbstractView {
     return `
     <ul class="stats">
       ${this._answers.map((answer) => `<li class="${this._getAnswerClassName(answer)}"></li>`).join(``)}
-      ${new Array(App.SETTINGS.MAX_LEVELS - this._answers.length).fill(`<li class="stats__result stats__result--unknown"></li>`).join(``)}
+      ${new Array(Setting.MAX_LEVELS - this._answers.length).fill(`<li class="stats__result stats__result--unknown"></li>`).join(``)}
     </ul>`;
   }
 
@@ -34,11 +34,11 @@ export default class StatLineView extends AbstractView {
       return StatLineView.AnswerType.WRONG;
     }
 
-    if (answer < App.SETTINGS.MAX_FAST_TIME) {
+    if (answer < Setting.MAX_FAST_TIME) {
       return StatLineView.AnswerType.FAST;
     }
 
-    if (answer >= App.SETTINGS.MIN_SLOW_TIME) {
+    if (answer >= Setting.MIN_SLOW_TIME) {
       return StatLineView.AnswerType.SLOW;
     }
 

@@ -2,25 +2,25 @@ import GameModel from './modules/game-model';
 import GamePresenter from './modules/game-presenter';
 import GreetingPresenter from './modules/greeting-presenter';
 import IntroPresenter from './modules/intro-presenter';
-import RulesPresenter from './modules/rules-presenter';
-import {SETTINGS} from './utils/settings';
-import StatsPresenter from './modules/stats-presenter';
-import Utils from './utils/utils';
-import Question from './data/question';
 import Loader from './utils/loader';
+import RulesPresenter from './modules/rules-presenter';
+import StatsPresenter from './modules/stats-presenter';
 
 
 export default class App {
+  /** @static */
   static showIntro() {
     const introPresenter = new IntroPresenter();
     introPresenter.init();
   }
 
+  /** @static */
   static showGreeting() {
     const greetingPresenter = new GreetingPresenter();
     greetingPresenter.init();
   }
 
+  /** @static */
   static showRules() {
     const rulesPresenter = new RulesPresenter();
     rulesPresenter.init();
@@ -39,6 +39,11 @@ export default class App {
       });
   }
 
+  /**
+   * @param {GameData.StateDataType} state
+   * @param {string} username
+   * @static
+   */
   static showStats(state, username) {
     const statsPresenter = new StatsPresenter(username);
     Loader.sendResults(state, username)
@@ -46,5 +51,3 @@ export default class App {
         .then((data) => statsPresenter.init(data));
   }
 }
-
-App.SETTINGS = SETTINGS;

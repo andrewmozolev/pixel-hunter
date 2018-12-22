@@ -1,4 +1,5 @@
 import AbstractView from '../utils/abstract-view';
+import {Setting} from '../utils/settings';
 
 
 export default class RulesView extends AbstractView {
@@ -31,8 +32,8 @@ export default class RulesView extends AbstractView {
           <img class="rules__icon" src="img/icon-photo.png" width="32" height="31" alt="Фото"> или рисунок
           <img class="rules__icon" src="img/icon-paint.png" width="32" height="31" alt="Рисунок"></li>
         <li>Фотографиями или рисунками могут быть оба изображения.</li>
-        <li>На каждую попытку отводится 30 секунд.</li>
-        <li>Ошибиться можно не более 3 раз.</li>
+        <li>На каждую попытку отводится ${Setting.MAX_TIME_FOR_ANSWER} секунд.</li>
+        <li>Ошибиться можно не более ${Setting.MAX_LIVES} раз.</li>
       </ul>
       <p class="rules__ready">Готовы?</p>
       <form class="rules__form">

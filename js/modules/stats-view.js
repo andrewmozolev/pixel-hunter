@@ -1,15 +1,15 @@
 import AbstractView from '../utils/abstract-view';
-import StatLineView from './statline-view';
 import GameData from '../data/game-data';
+import StatLineView from './statline-view';
+import {Setting} from '../utils/settings';
 
 
 export default class StatsView extends AbstractView {
   /**
    * @param {Array<Stat>} stats
    * @param {Array<*>} bonuses
-   * @param {boolean} isDefeat
    */
-  constructor(stats, bonuses, isDefeat) {
+  constructor(stats, bonuses) {
     super();
 
     /** @private {Array<Stat>} */
@@ -17,35 +17,40 @@ export default class StatsView extends AbstractView {
 
     /** @private {Array<*>} */
     this._bonuses = bonuses;
-
-    /** @private {boolean} */
-    this._isDefeat = isDefeat;
   }
 
   /** @inheritDoc */
   get template() {
-    return this._stats.map((stat, index) => `<section class="result">
-        ${index === 0 ? `<h2 class="result__title">${this._isDefeat ? `Поражение!` : `Победа!`}</h2>` : ``}
+    return this._stats.map((stat, index) => {
+      const isDefeat = stat.lives === 0;
+      const rightAnswersScore = GameData.getRightAnswersScore(stat.answers);
+
+      return `<section class="result">
+        ${index === 0 ? `<h2 class="result__title">${isDefeat ? `Поражение!` : `Победа!`}</h2>` : ``}
         <table class="result__table">
           <tr>
             <td class="result__number">${index}.</td>
             <td colspan="2">
               ${new StatLineView(stat.answers).template}
             </td>
-            <td class="result__points">× ${this._isDefeat ? 0 : 100}</td>
-            <td class="result__total">${this._isDefeat ? 0 : stat.answers.reduce((acc, answer) => acc + answer >= 0 ? 100 : 0, 0)}</td>
+            ${isDefeat ? `
+                <td class="result__total"></td>
+                <td class="result__total result__total--final">FAIL</td>` : `
+                <td class="result__points">× ${Setting.SCORE_CORRECT}</td>
+                <td class="result__total">${rightAnswersScore}</td>`}
           </tr>
-            ${this._bonuses.map((bonus) => `<tr>
+            ${isDefeat ? `` : this._bonuses[index].map((bonus) => `<tr>
               <td></td>
               <td class="result__extra">${bonus.title}</td>
               <td class="result__extra">${bonus.value}<span class="stats__result stats__result--fast"></span></td>
               <td class="result__points">× ${bonus.quantifier}</td>
               <td class="result__total">${bonus.value * bonus.quantifier}</td>
             </tr>`).join(``)}
-          <tr>
+          ${isDefeat ? `` : `<tr>
             <td colspan="5" class="result__total  result__total--final">${GameData.countScores(stat.answers, stat.lives)}</td>
-          </tr>
+          </tr>`}
         </table>
-      </section>`).join(``);
+      </section>`;
+    }).join(``);
   }
 }

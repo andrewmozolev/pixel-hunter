@@ -4,6 +4,7 @@ import GameView from './game-view';
 import HeaderView from './header-view';
 import Question from '../data/question';
 import StatLineView from './statline-view';
+import {Setting} from '../utils/settings';
 
 
 export default class GamePresenter extends AbstractPresenter {
@@ -32,18 +33,30 @@ export default class GamePresenter extends AbstractPresenter {
 
   stop() {
     clearTimeout(this._timer);
+    this._timer = null;
   }
 
   init() {
+    if (this._model.isEnd()) {
+      App.showStats(this._model.state, this._model.username);
+      this.stop();
+      return;
+    }
+
     this._nextQuestion();
     this._tick();
   }
 
-  setAnswer(isCorrect) {
+  /**
+   * @param {boolean} isCorrect
+   * @private
+   */
+  _setAnswer(isCorrect) {
     if (!isCorrect) {
       this._model.removeLife();
     }
 
+    this.stop();
     const time = this._model.time || 1;
     const answer = isCorrect ? time : -time;
     this._model.addAnswer(answer);
@@ -54,12 +67,6 @@ export default class GamePresenter extends AbstractPresenter {
 
   /** @private */
   _nextQuestion() {
-    if (this._model.isEnd()) {
-      App.showStats(this._model.state, this._model.username);
-      this.stop();
-      return;
-    }
-
     this._headerView = new HeaderView(this._model.state);
     this._headerView.onBackClick = () => App.showGreeting();
 
@@ -95,7 +102,7 @@ export default class GamePresenter extends AbstractPresenter {
       return this._model.isCorrectAnswer(image.src, checkedInput.value);
     });
 
-    this.setAnswer(isCorrectAnswer);
+    this._setAnswer(isCorrectAnswer);
   }
 
   /**
@@ -112,13 +119,24 @@ export default class GamePresenter extends AbstractPresenter {
     const isCorrectAnswer =
         this._model.isCorrectAnswer(target.src, this._model.getCorrectType());
 
-    this.setAnswer(isCorrectAnswer);
+    this._setAnswer(isCorrectAnswer);
   }
 
   _tick() {
     clearTimeout(this._timer);
     this._timer = setTimeout(() => {
       this._model.tick();
+
+      if (this._model.time > Setting.MAX_TIME_FOR_ANSWER) {
+        this._setAnswer(false);
+        return;
+      }
+
+      if (this._model.time >= Setting.MAX_TIME_FOR_ANSWER -
+          Setting.WARN_GAP_TIME) {
+        this._headerView.setTimeWarnAnimation();
+      }
+
       this._headerView.setTime(this._model.time);
       this._tick();
     }, 1000);
