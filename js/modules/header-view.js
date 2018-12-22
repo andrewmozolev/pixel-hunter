@@ -1,5 +1,5 @@
 import AbstractView from '../utils/abstract-view';
-import App from '../app';
+import {Setting} from '../utils/settings';
 
 
 export default class HeaderView extends AbstractView {
@@ -29,9 +29,9 @@ export default class HeaderView extends AbstractView {
           <use xlink:href="img/sprite.svg#logo-small"></use>
         </svg>
       </button>
-      ${this._isInfoEnabled ? `<div class="game__timer">${this._state.time}</div>
+      ${this._isInfoEnabled ? `<div class="${HeaderView.ClassName.GAME_TIMER}">${this._state.time}</div>
         <div class="game__lives">
-          ${new Array(App.SETTINGS.MAX_LIVES - this._state.lives).fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`).join(``)}
+          ${new Array(Setting.MAX_LIVES - this._state.lives).fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`).join(``)}
           ${new Array(this._state.lives).fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`).join(``)}
         </div>` : ``}
     </header>`;
@@ -39,18 +39,28 @@ export default class HeaderView extends AbstractView {
 
   /** @inheritDoc */
   bind() {
-    this._timeEl = this.element.querySelector(`.game__timer`);
+    this._timeEl = this.element.querySelector(`.${HeaderView.ClassName.GAME_TIMER}`);
     const backBtn = this.element.querySelector(`.back`);
-    if (backBtn) {
-      backBtn.addEventListener(`click`, () => {
-        this.onBackClick();
-      });
-    }
+    backBtn.addEventListener(`click`, () => {
+      this.onBackClick();
+    });
   }
 
+  /** @param {number} time */
   setTime(time) {
     this._timeEl.innerHTML = time;
   }
 
+  setTimeWarnAnimation() {
+    this._timeEl.classList.add(HeaderView.ClassName.GAME_TIMER_WARN);
+  }
+
+  /** @abstract */
   onBackClick() {}
 }
+
+/** @enum {string} */
+HeaderView.ClassName = {
+  GAME_TIMER: `game__timer`,
+  GAME_TIMER_WARN: `game__timer--warn`,
+};

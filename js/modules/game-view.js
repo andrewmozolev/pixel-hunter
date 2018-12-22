@@ -1,8 +1,8 @@
 import AbstractView from '../utils/abstract-view';
-import App from '../app';
 import Option from '../data/option';
 import Question from '../data/question';
 import Utils from '../utils/utils';
+import {Setting} from '../utils/settings';
 
 
 export default class GameView extends AbstractView {
@@ -56,44 +56,6 @@ export default class GameView extends AbstractView {
     this._form.addEventListener(`change`, () => this.onFormChangeHandler());
   }
 
-  /**
-   * @param {Option} option
-   * @param {number} index
-   * @return {string}
-   * @private
-   */
-  _getOption(option, index) {
-    const optionClassName = Utils.className(GameView.ClassName.GAME_OPTION,
-        App.SETTINGS.DEBUG && option.type === this._correctType, `correct`);
-
-    const optionAsImage = `<div class="${optionClassName}">
-        <img class="${GameView.ClassName.GAME_IMAGE}" src="${option.image.url}" alt="Option ${index + 1}" width="304" height="455">
-    </div>`;
-
-
-    const photoLabelClassName = Utils.className(GameView.ClassName.GAME_ANSWER,
-        true, `photo`,
-        App.SETTINGS.DEBUG && option.type === Option.Type.PHOTO, `correct`);
-    const paintingLabelClassName = Utils.className(GameView.ClassName.GAME_ANSWER,
-        true, `painting`,
-        App.SETTINGS.DEBUG && option.type === Option.Type.PAINTING, `correct`);
-
-    const optionWithButtons = `<div class="${GameView.ClassName.GAME_OPTION}">
-      <img class="${GameView.ClassName.GAME_IMAGE}" src="${option.image.url}" alt="Option ${index + 1}" width="468" height="458">
-      <label class="${photoLabelClassName}">
-        <input class="visually-hidden" name="question${index + 1}" type="radio" value="${Option.Type.PHOTO}">
-        <span>Фото</span>
-      </label>
-      <label class="${paintingLabelClassName}">
-        <input class="visually-hidden" name="question${index + 1}" type="radio" value="${Option.Type.PAINTING}">
-        <span>Рисунок</span>
-      </label>
-    </div>`;
-
-    return this._question.type === Question.Type.ONE_OF_THREE ?
-      optionAsImage : optionWithButtons;
-  }
-
   /** @return {Array<HTMLElement>} */
   getInputsElements() {
     if (!this._inputsElements) {
@@ -127,6 +89,44 @@ export default class GameView extends AbstractView {
   getPreciseImageCheckedInput(index) {
     const option = this._getPreciseOption(index);
     return option.querySelector(`input:checked`);
+  }
+
+  /**
+   * @param {Option} option
+   * @param {number} index
+   * @return {string}
+   * @private
+   */
+  _getOption(option, index) {
+    const optionClassName = Utils.className(GameView.ClassName.GAME_OPTION,
+        Setting.DEBUG && option.type === this._correctType, `correct`);
+
+    const optionAsImage = `<div class="${optionClassName}">
+        <img class="${GameView.ClassName.GAME_IMAGE}" src="${option.image.url}" alt="Option ${index + 1}" width="304" height="455">
+    </div>`;
+
+
+    const photoLabelClassName = Utils.className(GameView.ClassName.GAME_ANSWER,
+        true, `photo`,
+        Setting.DEBUG && option.type === Option.Type.PHOTO, `correct`);
+    const paintingLabelClassName = Utils.className(GameView.ClassName.GAME_ANSWER,
+        true, `painting`,
+        Setting.DEBUG && option.type === Option.Type.PAINTING, `correct`);
+
+    const optionWithButtons = `<div class="${GameView.ClassName.GAME_OPTION}">
+      <img class="${GameView.ClassName.GAME_IMAGE}" src="${option.image.url}" alt="Option ${index + 1}" width="468" height="458">
+      <label class="${photoLabelClassName}">
+        <input class="visually-hidden" name="question${index + 1}" type="radio" value="${Option.Type.PHOTO}">
+        <span>Фото</span>
+      </label>
+      <label class="${paintingLabelClassName}">
+        <input class="visually-hidden" name="question${index + 1}" type="radio" value="${Option.Type.PAINTING}">
+        <span>Рисунок</span>
+      </label>
+    </div>`;
+
+    return this._question.type === Question.Type.ONE_OF_THREE ?
+      optionAsImage : optionWithButtons;
   }
 
   /**

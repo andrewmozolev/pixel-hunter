@@ -4,16 +4,9 @@ export default class AbstractView {
     this._element = null;
   }
 
-  /** @return {HTMLElement} */
-  createDom() {
-    const div = document.createElement(`div`);
-    div.innerHTML = this.template.trim();
-    return div.childNodes.length > 1 ? div : div.childNodes[0];
-  }
-
   /**
-   * @abstract
    * @return {string}
+   * @abstract
    */
   get template() {
     if (new.target === AbstractView) {
@@ -29,6 +22,13 @@ export default class AbstractView {
     this._element = this.createDom();
     this.bind();
     return this._element;
+  }
+
+  /** @return {HTMLElement} */
+  createDom() {
+    const div = document.createElement(`div`);
+    div.innerHTML = this.template.trim();
+    return div.childNodes.length > 1 ? div : div.childNodes[0];
   }
 
   /** @abstract */

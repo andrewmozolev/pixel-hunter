@@ -14,7 +14,7 @@ export default class RulesPresenter extends AbstractPresenter {
 
   init() {
     const headerView = new HeaderView();
-    headerView.onBackClick = () => App.showIntro();
+    headerView.onBackClick = () => App.showGreeting();
 
     this._rulesView = new RulesView();
     this._rulesView.onBlurHandler = () => this._onBlurHandler();

@@ -1,6 +1,6 @@
-import App from '../app';
 import GameData from '../data/game-data';
 import Option from '../data/option';
+import {Setting} from '../utils/settings';
 
 
 export default class GameModel {
@@ -86,7 +86,7 @@ export default class GameModel {
 
   /** @return {boolean} */
   isEnd() {
-    return this.answers.length === App.SETTINGS.MAX_LEVELS ||
+    return this.answers.length === Setting.MAX_LEVELS ||
       this.lives === 0;
   }
 

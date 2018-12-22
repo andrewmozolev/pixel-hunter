@@ -1,15 +1,16 @@
-import App from '../app';
+import {Setting} from '../utils/settings';
 
 
 export default class GameData {
   /**
    * @param {Array<number>} answers
    * @param {number} lives
-   * @static
    * @return {number}
+   * @static
    */
   static countScores(answers, lives) {
-    if (!Array.isArray(answers) || answers.length !== App.SETTINGS.NUMBER_OF_ANSWERS) {
+    if (!Array.isArray(answers) ||
+        answers.length !== Setting.NUMBER_OF_ANSWERS) {
       return -1;
     }
 
@@ -17,19 +18,19 @@ export default class GameData {
 
     answers.forEach((answer) => {
       if (answer >= 0) {
-        scores += App.SETTINGS.SCORE_CORRECT;
+        scores += Setting.SCORE_CORRECT;
       }
 
-      if (answer >= 0 && answer < App.SETTINGS.MAX_FAST_TIME) {
-        scores += App.SETTINGS.SCORE_FAST;
+      if (answer >= 0 && answer < Setting.MAX_FAST_TIME) {
+        scores += Setting.SCORE_FAST;
       }
 
-      if (answer >= 0 && answer >= App.SETTINGS.MIN_SLOW_TIME) {
-        scores += App.SETTINGS.SCORE_SLOW;
+      if (answer >= Setting.MIN_SLOW_TIME) {
+        scores += Setting.SCORE_SLOW;
       }
     });
 
-    scores += lives * App.SETTINGS.SCORE_LIFE;
+    scores += lives * Setting.SCORE_LIFE;
 
     return scores;
   }
@@ -37,8 +38,8 @@ export default class GameData {
   /**
    * @param {GameData.StateDataType} state
    * @param {number} lives
-   * @public
    * @return {GameData.StateDataType}
+   * @static
    */
   static changeLives(state, lives) {
     if (typeof lives !== `number`) {
@@ -51,9 +52,9 @@ export default class GameData {
       });
     }
 
-    if (lives > App.SETTINGS.MAX_LIVES) {
+    if (lives > Setting.MAX_LIVES) {
       return Object.assign({}, state, {
-        lives: App.SETTINGS.MAX_LIVES
+        lives: Setting.MAX_LIVES
       });
     }
 
@@ -64,8 +65,8 @@ export default class GameData {
 
   /**
    * @param {GameData.StateDataType} state
-   * @public
    * @return {GameData.StateDataType}
+   * @static
    */
   static removeLife(state) {
     return this.changeLives(state, state.lives - 1);
@@ -75,8 +76,8 @@ export default class GameData {
   /**
    * @param {GameData.StateDataType} state
    * @param {number} question
-   * @static
    * @return {GameData.StateDataType}
+   * @static
    */
   static changeQuestion(state, question) {
     if (typeof question !== `number`) {
@@ -89,9 +90,9 @@ export default class GameData {
       });
     }
 
-    if (question > App.SETTINGS.MAX_LEVELS) {
+    if (question > Setting.MAX_LEVELS) {
       return Object.assign({}, state, {
-        question: App.SETTINGS.MAX_LEVELS
+        question: Setting.MAX_LEVELS
       });
     }
 
@@ -103,8 +104,8 @@ export default class GameData {
   /**
    * @param {GameData.StateDataType} state
    * @param {number} time
-   * @static
    * @return {GameData.StateDataType}
+   * @static
    */
   static changeTime(state, time) {
     if (typeof time !== `number`) {
@@ -125,8 +126,8 @@ export default class GameData {
   /**
    * @param {GameData.StateDataType} state
    * @param {number} answer
-   * @static
    * @return {GameData.StateDataType}
+   * @static
    */
   static addAnswer(state, answer) {
     if (typeof answer !== `number`) {
@@ -139,6 +140,24 @@ export default class GameData {
     return Object.assign({}, state, {
       answers
     });
+  }
+
+  /**
+   * @param {Array<number>} answers
+   * @return {number}
+   * @static
+   */
+  static getRightAnswersAmount(answers) {
+    return answers.reduce((acc, answer) => acc + +(answer > 0), 0);
+  }
+
+  /**
+   * @param {Array<number>} answers
+   * @return {number}
+   */
+  static getRightAnswersScore(answers) {
+    const rightAnswersAmount = GameData.getRightAnswersAmount(answers);
+    return rightAnswersAmount * Setting.SCORE_CORRECT;
   }
 }
 
@@ -159,6 +178,6 @@ GameData.StateDataType;
 GameData.INITIAL_STATE = Object.freeze({
   answers: [],
   question: 0,
-  lives: 3,
+  lives: Setting.MAX_LIVES,
   time: 0,
 });
