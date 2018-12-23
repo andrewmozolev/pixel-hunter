@@ -61,7 +61,7 @@ export default class GameModel {
 
   /** @return {string} */
   get gameType() {
-    return this.question.type;
+    return this.question ? this.question.type : ``;
   }
 
   nextQuestion() {
