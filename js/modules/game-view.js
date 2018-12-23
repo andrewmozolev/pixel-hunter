@@ -59,7 +59,7 @@ export default class GameView extends AbstractView {
   /** @return {Array<HTMLElement>} */
   getInputsElements() {
     if (!this._inputsElements) {
-      this._inputsElements = [...this._form.elements];
+      this._inputsElements = [...this._form.querySelectorAll(`input`)];
     }
     return this._inputsElements;
   }
@@ -68,7 +68,7 @@ export default class GameView extends AbstractView {
   getOptionsElements() {
     if (!this._optionsElements) {
       this._optionsElements =
-        [...this._form.getElementsByClassName(GameView.ClassName.GAME_OPTION)];
+        [...this._form.querySelectorAll(`.${GameView.ClassName.GAME_OPTION}`)];
     }
     return this._optionsElements;
   }
