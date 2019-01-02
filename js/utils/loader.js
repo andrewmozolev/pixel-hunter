@@ -8,12 +8,11 @@ export default class Loader {
    * @return {Promise<Array<Question>>}
    * @static
    */
-  static loadQuestions() {
-    return fetch(Loader.QUESTIONS_URL)
-        .then(this._checkStatus)
-        .then((response) => response.json())
-        .then((rawData) => Utils.parseArray(rawData, Question.parse))
-        .catch((err) => window.console.error(err));
+  static async loadQuestions() {
+    const response = await fetch(Loader.QUESTIONS_URL);
+    const checkedResponse = this._checkStatus(response);
+    const data = await checkedResponse.json();
+    return Utils.parseArray(data, Question.parse);
   }
 
   /**
@@ -22,7 +21,7 @@ export default class Loader {
    * @return {Promise<Response>}
    * @static
    */
-  static sendResults(state, username = Loader.DEFAULT_USER_NAME) {
+  static async sendResults(state, username = Loader.DEFAULT_USER_NAME) {
     const data = {
       stats: state.answers,
       lives: state.lives
@@ -38,8 +37,9 @@ export default class Loader {
 
     const url = this._getResultsUrl(username);
 
-    return fetch(url, requestSettings)
-        .then(this._checkStatus);
+    const response = await fetch(url, requestSettings);
+    this._checkStatus(response);
+    return response;
   }
 
   /**
@@ -47,14 +47,13 @@ export default class Loader {
    * @return {Promise}
    * @static
    */
-  static loadResults(username = Loader.DEFAULT_USER_NAME) {
+  static async loadResults(username = Loader.DEFAULT_USER_NAME) {
     const url = this._getResultsUrl(username);
-    return fetch(url)
-        .then(this._checkStatus)
-        .then((response) => response.json())
-        .then((rawData) => Utils.parseArray(rawData, Stat.parse))
-        .then((stats) => stats.reverse())
-        .catch((err) => window.console.error(err));
+    const response = await fetch(url);
+    this._checkStatus(response);
+    const rawData = await response.json();
+    const stats = Utils.parseArray(rawData, Stat.parse);
+    return stats.reverse();
   }
 
   /**

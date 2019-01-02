@@ -30,13 +30,11 @@ export default class App {
    * @param {string} username
    * @static
    */
-  static showGame(username) {
-    Loader.loadQuestions()
-      .then((data) => {
-        const model = new GameModel(data, username);
-        const gamePresenter = new GamePresenter(model);
-        gamePresenter.init();
-      });
+  static async showGame(username) {
+    const questions = await Loader.loadQuestions();
+    const model = new GameModel(questions, username);
+    const gamePresenter = new GamePresenter(model);
+    gamePresenter.init();
   }
 
   /**
@@ -44,10 +42,10 @@ export default class App {
    * @param {string} username
    * @static
    */
-  static showStats(state, username) {
+  static async showStats(state, username) {
     const statsPresenter = new StatsPresenter(username);
-    Loader.sendResults(state, username)
-        .then(() => Loader.loadResults(username))
-        .then((data) => statsPresenter.init(data));
+    await Loader.sendResults(state, username);
+    const result = await Loader.loadResults(username);
+    statsPresenter.init(result);
   }
 }
