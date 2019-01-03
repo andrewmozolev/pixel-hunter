@@ -1,7 +1,21 @@
 import {Setting} from '../utils/settings';
 
 
+export type StateDataType = {
+  answers: Array<number>,
+  question: number,
+  lives: number,
+  time: number,
+}
+
 export default class GameData {
+  static INITIAL_STATE: StateDataType = Object.freeze({
+    answers: [],
+    question: 0,
+    lives: Setting.MAX_LIVES,
+    time: 0,
+  })
+
   /**
    * @param {Array<number>} answers
    * @param {number} lives
@@ -160,23 +174,3 @@ export default class GameData {
     return rightAnswersAmount * Setting.SCORE_CORRECT;
   }
 }
-
-/**
- * @typedef {{
- *   answers: Array<number>,
- *   question: number,
- *   lives: number,
- *   time: number,
- * }} GameData.StateDataType
- */
-
-/**
- * @const {GameData.StateDataType}
- * @readonly
- */
-GameData.INITIAL_STATE = Object.freeze({
-  answers: [],
-  question: 0,
-  lives: Setting.MAX_LIVES,
-  time: 0,
-});

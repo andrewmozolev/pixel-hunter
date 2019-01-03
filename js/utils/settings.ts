@@ -1,4 +1,3 @@
-/** @readonly */
 export const Setting = Object.freeze({
   DEBUG: false,
   MAX_FAST_TIME: 10,

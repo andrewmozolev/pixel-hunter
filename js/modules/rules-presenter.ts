@@ -5,11 +5,12 @@ import RulesView from './rules-view';
 
 
 export default class RulesPresenter extends AbstractPresenter {
+  private _rulesView: RulesView;
+
+  readonly FOCUS_DELAY: number = 100;
+
   constructor() {
     super();
-
-    /** @private {RulesView} */
-    this._rulesView = null;
   }
 
   init() {
@@ -25,26 +26,17 @@ export default class RulesPresenter extends AbstractPresenter {
     this.addChildren(headerView, this._rulesView);
   }
 
-  /** @private */
-  _onBlurHandler() {
-    setTimeout(() => this._rulesView.input.focus(), RulesPresenter.FOCUS_DELAY);
+  private _onBlurHandler() {
+    setTimeout(() => this._rulesView.input.focus(), this.FOCUS_DELAY);
   }
 
-  /** @private */
-  _onInputHandler() {
+  private _onInputHandler() {
     this._rulesView.switchButton(this._rulesView.value.trim().length > 0);
   }
 
-  /**
-   * @param {Event} evt
-   * @private
-   */
-  _onSubmitHandler(evt) {
+  private _onSubmitHandler(evt: Event) {
     evt.preventDefault();
     App.showGame(this._rulesView.value);
     this._rulesView.resetInput();
   }
 }
-
-/** @const {number} */
-RulesPresenter.FOCUS_DELAY = 100;

@@ -3,27 +3,22 @@ import {Setting} from '../utils/settings';
 
 
 export default class RulesView extends AbstractView {
+  private _input: HTMLInputElement;
+  private _btn: Element;
+
   constructor() {
     super();
-
-    /** @private {?HTMLElement} */
-    this._input = null;
-
-    /** @private {?HTMLElement} */
-    this._btn = null;
   }
 
-  /** @return {HTMLElement} */
-  get input() {
+  get input(): HTMLInputElement {
     return this._input;
   }
 
   /** @return {string} */
-  get value() {
+  get value(): string {
     return this.input.value;
   }
 
-  /** @inheritDoc */
   get template() {
     return `<section class="rules">
       <h2 class="rules__title">Правила</h2>
@@ -43,18 +38,17 @@ export default class RulesView extends AbstractView {
     </section>`;
   }
 
-  /** @inheritDoc */
   bind() {
-    const form = this.element.querySelector(`.rules__form`);
-    this._input = this.element.querySelector(`.rules__input`);
-    this._btn = this.element.querySelector(`.rules__button`);
+    const form = <Element> this.element.querySelector(`.rules__form`);
+    this._input = <HTMLInputElement> this.element.querySelector(`.rules__input`);
+    this._btn = <Element> this.element.querySelector(`.rules__button`);
 
-    this._input.addEventListener(`input`, () => this.onInputHandler());
+    this._input.addEventListener(`input`, (evt) => this.onInputHandler(evt));
     this._input.addEventListener(`blur`, (evt) => this.onBlurHandler(evt));
     form.addEventListener(`submit`, (evt) => this.onSubmitHandler(evt));
   }
 
-  switchButton(isButtonEnabled) {
+  public switchButton(isButtonEnabled: boolean) {
     if (isButtonEnabled) {
       this._btn.removeAttribute(`disabled`);
     } else {
@@ -62,16 +56,13 @@ export default class RulesView extends AbstractView {
     }
   }
 
-  resetInput() {
+  public resetInput() {
     this.input.value = ``;
   }
 
-  /** @abstract */
-  onBlurHandler() {}
+  onBlurHandler(evt: Event): void {}
 
-  /** @abstract */
-  onInputHandler() {}
+  onInputHandler(evt: Event): void {}
 
-  /** @abstract */
-  onSubmitHandler() {}
+  onSubmitHandler(evt: Event): void {}
 }

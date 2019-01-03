@@ -4,10 +4,10 @@ import {Setting} from '../utils/settings';
 
 
 export default class StatLineView extends AbstractView {
+  private _answers: any
   constructor(answers) {
     super();
 
-    /** @private */
     this._answers = answers;
   }
 
@@ -21,7 +21,7 @@ export default class StatLineView extends AbstractView {
     };
   }
 
-  get template() {
+  get template(): string {
     return `
     <ul class="stats">
       ${this._answers.map((answer) => `<li class="${this._getAnswerClassName(answer)}"></li>`).join(``)}
@@ -29,7 +29,7 @@ export default class StatLineView extends AbstractView {
     </ul>`;
   }
 
-  _getAnswerType(answer) {
+  private _getAnswerType(answer) {
     if (answer < 0) {
       return StatLineView.AnswerType.WRONG;
     }
@@ -45,7 +45,7 @@ export default class StatLineView extends AbstractView {
     return StatLineView.AnswerType.CORRECT;
   }
 
-  _getAnswerClassName(answer) {
+  private _getAnswerClassName(answer) {
     const answerType = this._getAnswerType(answer);
     return Utils.className(`stats__result`,
         answerType === StatLineView.AnswerType.CORRECT, StatLineView.AnswerType.CORRECT,

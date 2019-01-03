@@ -4,6 +4,10 @@ import Stat from '../data/stat';
 
 
 export default class Loader {
+  static DEFAULT_USER_NAME: string = `unknown`;
+  static QUESTIONS_URL: string = `https://es.dump.academy/pixel-hunter/questions`;
+  static APP_ID: string = `125911`;
+
   /**
    * @return {Promise<Array<Question>>}
    * @static
@@ -78,12 +82,3 @@ export default class Loader {
     }
   }
 }
-
-/** @const {string} */
-Loader.DEFAULT_USER_NAME = `unknown`;
-
-/** @const {string} */
-Loader.QUESTIONS_URL = `https://es.dump.academy/pixel-hunter/questions`;
-
-/** @const {string} */
-Loader.APP_ID = `125911`;

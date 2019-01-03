@@ -3,49 +3,40 @@ import App from '../app';
 import HeaderView from './header-view';
 import StatsView from './stats-view';
 import {Setting} from '../utils/settings';
+import Stat from '../data/stat';
+import {StateDataType} from '../data/game-data';
 
 
 export default class StatsPresenter extends AbstractPresenter {
-  /** @param {string} username */
-  constructor(username) {
+  private stats: Array<Stat>|null;
+  private username: string;
+
+  constructor(username: string) {
     super();
 
-    /** @private {?Array<Stat>}*/
-    this._stats = null;
+    this.stats = null;
 
-    /** @private {string} */
-    this._username = username;
+    username;
   }
 
-  /** @param {Array<Stat>} stats */
-  init(stats) {
-    this._stats = stats;
+  init(stats: Array<Stat>) {
+    this.stats = stats;
 
     const headerView = new HeaderView();
     headerView.onBackClick = () => App.showGreeting();
 
-    const statsView = new StatsView(this._stats,
-        this._getBonusesPack(this._stats));
+    const statsView = new StatsView(this.stats,
+        this._getBonusesPack(this.stats));
 
     this.addChildren(headerView, statsView);
   }
 
-  /**
-   * @param {Array<Stat>} stats
-   * @return {Array<*>}
-   * @private
-   */
-  _getBonusesPack(stats) {
+  private _getBonusesPack(stats: Array<Stat>): Array<any> {
     return stats.map((stat) => this._getBonuses(stat));
   }
 
-  /**
-   * @param {GameData.StateDataType} state
-   * @return {Array<*>}
-   * @private
-   */
-  _getBonuses(state) {
-    const bonuses = [];
+  private _getBonuses(state: Stat): Array<any> {
+    const bonuses = <Array<any>> [];
     const speedBonuses = state.answers.reduce((acc, answer) => {
       return acc + (answer >= 0 && answer < Setting.MAX_FAST_TIME ? 1 : 0);
     }, 0);

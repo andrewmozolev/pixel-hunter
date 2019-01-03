@@ -16,6 +16,7 @@
     "@babel/preset-env": "^7.2.3",
     "autoprefixer": "9.0.2",
     "browser-sync": "2.24.6",
+    "browserify": "^16.2.3",
     "chai": "4.2.0",
     "css-mqpacker": "7.0.0",
     "del": "3.0.0",
@@ -37,7 +38,10 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "stylelint": "9.4.x",
-    "stylelint-config-htmlacademy": "0.1.x"
+    "stylelint-config-htmlacademy": "0.1.x",
+    "tsify": "^4.0.1",
+    "typescript": "^3.2.2",
+    "vinyl-source-stream": "^2.0.0"
   },
   "engines": {
     "node": "10"

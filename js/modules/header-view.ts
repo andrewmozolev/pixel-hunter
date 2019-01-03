@@ -1,23 +1,27 @@
 import AbstractView from '../utils/abstract-view';
 import {Setting} from '../utils/settings';
+import {StateDataType} from '../data/game-data'
 
 
-export default class HeaderView extends AbstractView {
-  /** @param {GameData.StateDataType} state */
-  constructor(state) {
+enum HeaderViewClassName {
+  GAME_TIMER = 'game__timer',
+  GAME_TIMER_WARN = 'game__timer--warn',
+};
+
+interface HeaderView {
+  onBackClick(evt?: Event): void;
+}
+
+class HeaderView extends AbstractView {
+  readonly _state?: StateDataType;
+  private _timeEl: Element;
+
+  constructor(state?: StateDataType) {
     super();
 
-    /** @private {GameData.StateDataType} */
     this._state = state;
-
-    /** @private {boolean} */
-    this._isInfoEnabled = !!state;
-
-    /** @private {?HTMLElement} */
-    this._timeEl = null;
   }
 
-  /** @inheritDoc */
   get template() {
     return `<header class="header">
       <button class="back">
@@ -29,7 +33,7 @@ export default class HeaderView extends AbstractView {
           <use xlink:href="img/sprite.svg#logo-small"></use>
         </svg>
       </button>
-      ${this._isInfoEnabled ? `<div class="${HeaderView.ClassName.GAME_TIMER}">${this._state.time}</div>
+      ${this._state ? `<div class="${HeaderViewClassName.GAME_TIMER}">${this._state.time}</div>
         <div class="game__lives">
           ${new Array(Setting.MAX_LIVES - this._state.lives).fill(`<img src="img/heart__empty.svg" class="game__heart" alt=" Missed Life" width="31" height="27">`).join(``)}
           ${new Array(this._state.lives).fill(`<img src="img/heart__full.svg" class="game__heart" alt="Life" width="31" height="27">`).join(``)}
@@ -37,30 +41,21 @@ export default class HeaderView extends AbstractView {
     </header>`;
   }
 
-  /** @inheritDoc */
   bind() {
-    this._timeEl = this.element.querySelector(`.${HeaderView.ClassName.GAME_TIMER}`);
-    const backBtn = this.element.querySelector(`.back`);
+    this._timeEl = <Element> this.element.querySelector(`.${HeaderViewClassName.GAME_TIMER}`);
+    const backBtn = <Element> this.element.querySelector(`.back`);
     backBtn.addEventListener(`click`, () => {
       this.onBackClick();
     });
   }
 
-  /** @param {number} time */
-  setTime(time) {
-    this._timeEl.innerHTML = time;
+  public setTime(time: number) {
+    this._timeEl.innerHTML = time.toString();
   }
 
-  setTimeWarnAnimation() {
-    this._timeEl.classList.add(HeaderView.ClassName.GAME_TIMER_WARN);
+  public setTimeWarnAnimation() {
+    this._timeEl.classList.add(HeaderViewClassName.GAME_TIMER_WARN);
   }
-
-  /** @abstract */
-  onBackClick() {}
 }
 
-/** @enum {string} */
-HeaderView.ClassName = {
-  GAME_TIMER: `game__timer`,
-  GAME_TIMER_WARN: `game__timer--warn`,
-};
+export default HeaderView;

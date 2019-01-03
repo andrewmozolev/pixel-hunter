@@ -8,15 +8,13 @@ export default class IntroPresenter extends AbstractPresenter {
     super();
   }
 
-  /** @inheritDoc */
   init() {
     const introView = new IntroView();
     introView.onAsteriskClick = () => this._onAsteriskClick();
     this.addChildren(introView);
   }
 
-  /** @inheritDoc */
-  _onAsteriskClick() {
+  private _onAsteriskClick() {
     App.showGreeting();
   }
 }

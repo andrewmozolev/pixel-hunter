@@ -11,12 +11,11 @@ const rename = require(`gulp-rename`);
 const imagemin = require(`gulp-imagemin`);
 const svgstore = require(`gulp-svgstore`);
 const rollup = require(`gulp-better-rollup`);
-const sourcemaps = require(`gulp-sourcemaps`);
 const mocha = require(`gulp-mocha`);
 const commonjs = require(`rollup-plugin-commonjs`);
-const resolve = require(`rollup-plugin-node-resolve`);
-const babel = require(`rollup-plugin-babel`);
-const uglify = require(`gulp-uglify`);
+const browserify = require(`browserify`);
+const source = require(`vinyl-source-stream`);
+const tsify = require(`tsify`);
 
 
 gulp.task(`style`, () => {
@@ -51,23 +50,17 @@ gulp.task(`sprite`, () => {
   .pipe(gulp.dest(`build/img`));
 });
 
-gulp.task(`scripts`, () => {
-  return gulp.src(`js/main.js`)
-  .pipe(plumber())
-  .pipe(sourcemaps.init())
-  .pipe(rollup({
-    plugins: [
-      resolve({browser: true}),
-      commonjs(),
-      babel({
-        babelrc: false,
-        exclude: `node_modules/**`,
-        presets: [`@babel/env`]
-      })
-    ]
-  }, `iife`))
-  .pipe(uglify())
-  .pipe(sourcemaps.write(``))
+gulp.task(`scripts`, function () {
+  return browserify({
+    basedir: `.`,
+    debug: true,
+    entries: [`js/main.ts`],
+    cache: {},
+    packageCache: {}
+  })
+  .plugin(tsify)
+  .bundle()
+  .pipe(source(`main.js`))
   .pipe(gulp.dest(`build/js`));
 });
 
@@ -118,7 +111,7 @@ gulp.task(`serve`, [`assemble`], () => {
       gulp.start(`copy-html`);
     }
   });
-  gulp.watch(`js/**/*.js`, [`js-watch`]);
+  gulp.watch(`js/**/*.ts`, [`js-watch`]);
 });
 
 gulp.task(`assemble`, [`clean`], () => {

@@ -2,25 +2,22 @@ import AbstractView from '../utils/abstract-view';
 import GameData from '../data/game-data';
 import StatLineView from './statline-view';
 import {Setting} from '../utils/settings';
+import Stat from '../data/stat';
 
 
 export default class StatsView extends AbstractView {
-  /**
-   * @param {Array<Stat>} stats
-   * @param {Array<*>} bonuses
-   */
-  constructor(stats, bonuses) {
+  private _stats: Array<Stat>;
+  private _bonuses: Array<any>;
+
+  constructor(stats: Array<Stat>, bonuses: Array<any>) {
     super();
 
-    /** @private {Array<Stat>} */
     this._stats = stats;
-
-    /** @private {Array<*>} */
     this._bonuses = bonuses;
   }
 
-  /** @inheritDoc */
-  get template() {
+
+  get template(): string {
     return this._stats.map((stat, index) => {
       const isDefeat = stat.lives === 0;
       const rightAnswersScore = GameData.getRightAnswersScore(stat.answers);

@@ -1,45 +1,30 @@
 import AbstractPresenter from '../utils/abstract-presenter';
 import App from '../app';
-import GameView from './game-view';
+import GameView, {GameViewClassName} from './game-view';
 import HeaderView from './header-view';
-import Question from '../data/question';
+import Question, {QuestionType} from '../data/question';
 import StatLineView from './statline-view';
 import {Setting} from '../utils/settings';
+import GameModel from './game-model';
 
 
 export default class GamePresenter extends AbstractPresenter {
-  /**
-   * @param {GameModel} model
-   * @param {string} username
-   */
-  constructor(model) {
+  private _model: GameModel;
+  private _gameView: GameView;
+  private _headerView: HeaderView;
+  private _statLineView: StatLineView;
+  private _timer: number | null;
+
+  constructor(model: GameModel) {
     super();
 
-    /** @private {GameModel} */
     this._model = model;
-
-    /** @private {GameView} */
-    this._gameView = null;
-
-    /** @private {HeaderView} */
-    this._headerView = null;
-
-    /** @private {StatLineView} */
-    this._statLineView = null;
-
-    /** @private {?number} */
-    this._timer = null;
   }
 
-  stop() {
-    clearTimeout(this._timer);
-    this._timer = null;
-  }
-
-  init() {
+  public init() {
     if (this._model.isEnd()) {
       App.showStats(this._model.state, this._model.username);
-      this.stop();
+      this._stop();
       return;
     }
 
@@ -47,16 +32,19 @@ export default class GamePresenter extends AbstractPresenter {
     this._tick();
   }
 
-  /**
-   * @param {boolean} isCorrect
-   * @private
-   */
-  _setAnswer(isCorrect) {
+  private _stop() {
+    if (typeof this._timer === `number`) {
+      clearTimeout(this._timer);
+    }
+    this._timer = null;
+  }
+
+  private _setAnswer(isCorrect: boolean) {
     if (!isCorrect) {
       this._model.removeLife();
     }
 
-    this.stop();
+    this._stop();
     const time = this._model.time || 1;
     const answer = isCorrect ? time : -time;
     this._model.addAnswer(answer);
@@ -65,8 +53,7 @@ export default class GamePresenter extends AbstractPresenter {
     this.init();
   }
 
-  /** @private */
-  _nextQuestion() {
+  private _nextQuestion() {
     this._headerView = new HeaderView(this._model.state);
     this._headerView.onBackClick = () => App.showGreeting();
 
@@ -80,9 +67,8 @@ export default class GamePresenter extends AbstractPresenter {
     this.addChildren(this._headerView, this._gameView, this._statLineView);
   }
 
-  /** @private */
-  _onFormChangeHandler() {
-    if (this._model.gameType === Question.Type.ONE_OF_THREE) {
+  private _onFormChangeHandler() {
+    if (this._model.gameType === QuestionType.ONE_OF_THREE) {
       return;
     }
 
@@ -110,21 +96,24 @@ export default class GamePresenter extends AbstractPresenter {
    * @param {HTMLElement} param.target
    * @private
    */
-  _onFormClickHandler({target}) {
-    if (this._model.gameType !== Question.Type.ONE_OF_THREE ||
-        target.className !== GameView.ClassName.GAME_IMAGE) {
+  private _onFormClickHandler(evt: Event) {
+    const formEl = <HTMLFormElement> evt.target;
+    if (this._model.gameType !== QuestionType.ONE_OF_THREE ||
+        formEl.className !== GameViewClassName.GAME_IMAGE) {
       return;
     }
 
     const isCorrectAnswer =
-        this._model.isCorrectAnswer(target.src, this._model.getCorrectType());
+        this._model.isCorrectAnswer(formEl.src, this._model.getCorrectType());
 
     this._setAnswer(isCorrectAnswer);
   }
 
-  _tick() {
-    clearTimeout(this._timer);
-    this._timer = setTimeout(() => {
+  private _tick() {
+    if (typeof this._timer === `number`) {
+      clearTimeout(this._timer);
+    }
+    this._timer = window.setTimeout(() => {
       this._model.tick();
 
       if (this._model.time > Setting.MAX_TIME_FOR_ANSWER) {

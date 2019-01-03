@@ -1,12 +1,14 @@
 import AbstractView from '../utils/abstract-view';
 
+interface GreetingView {
+  onArrowClick(evt?: Event): void;
+}
 
-export default class GreetingView extends AbstractView {
+class GreetingView extends AbstractView {
   constructor() {
     super();
   }
 
-  /** @inheritDoc */
   get template() {
     return `<section class="greeting central--blur">
       <img class="greeting__logo" src="img/logo_ph-big.svg" width="201" height="89" alt="Pixel Hunter">
@@ -30,15 +32,13 @@ export default class GreetingView extends AbstractView {
     </section>`;
   }
 
-  /** @inheritDoc */
   bind() {
-    const arrow = this.element.querySelector(`.greeting__continue`);
+    const arrow = <Element> this.element.querySelector(`.greeting__continue`);
 
     arrow.addEventListener(`click`, () => {
       this.onArrowClick();
     });
   }
-
-  /** @abstract */
-  onArrowClick() {}
 }
+
+export default GreetingView;

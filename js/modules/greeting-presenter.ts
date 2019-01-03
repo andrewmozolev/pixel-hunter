@@ -8,14 +8,13 @@ export default class GreetingPresenter extends AbstractPresenter {
     super();
   }
 
-  init() {
+  public init() {
     const greetingView = new GreetingView();
     greetingView.onArrowClick = () => this._onArrowClick();
     this.addChildren(greetingView);
   }
 
-  /** @private */
-  _onArrowClick() {
+  private _onArrowClick() {
     App.showRules();
   }
 }
